@@ -1,0 +1,4 @@
+VIEW yearpopulation (in year INTEGER) AS
+SELECT Country_Name,Year,VALUE
+FROM MY_BOOKSHOP_POPULATION
+WHERE year = :year ;

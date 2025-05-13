@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="minmaxyearspopulation" applyPrivilegeType="NONE" dataCategory="DIMENSION" dimensionType="STANDARD" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Projection" application="BAS" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="minmaxyearspopulation"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="yearpopulation">
+    <resourceUri>yearpopulation</resourceUri>
+  </DataSource>
+  <DataSource id="maxgrowthyearpopulation">
+    <resourceUri>maxgrowthyearpopulation</resourceUri>
+  </DataSource>
+  <DataSource id="mingrowthyearpopulation">
+    <resourceUri>mingrowthyearpopulation</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="YEAR"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="yearpopulation"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_2">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="MAXGROWTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="maxgrowthyearpopulation"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_1" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="mingrowth"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+    </input>
+    <input node="mingrowthyearpopulation">
+      <mapping xsi:type="Calculation:AttributeMapping" target="mingrowth" source="mingrowth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+    </input>
+    <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+    <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_1_2" cardinality="CN_N" joinType="inner" multiJoinNode="Join_1" multiJoinCentralTable="Projection_1" multiJoinOrder="Outside In">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="mingrowth"/>
+      <viewAttribute id="MAXGROWTH"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="FINALYEAR" datatype="NVARCHAR" length="5000" expressionLanguage="SQL">
+        <formula>CONCAT(CONCAT(&quot;YEAR&quot;,' - '),&quot;YEAR&quot;+1)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="mingrowth" source="mingrowth"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+    </input>
+    <input node="Projection_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAXGROWTH" source="MAXGROWTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+    </input>
+    <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+    <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+  </calculationView>
+</calculationViews>
+<logicalModel id="Join_1_2">
+  <attributes>
+    <attribute id="COUNTRY_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY_NAME"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="COUNTRY_NAME"/>
+    </attribute>
+    <attribute id="COUNTRY_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="COUNTRY_CODE"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="COUNTRY_CODE"/>
+    </attribute>
+    <attribute id="MAXGROWTH" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Growth"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="MAXGROWTH"/>
+    </attribute>
+    <attribute id="mingrowth" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Growth"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="mingrowth"/>
+    </attribute>
+    <attribute id="FINALYEAR" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="FINALYEAR"/>
+      <keyMapping columnObjectName="Join_1_2" columnName="FINALYEAR"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures/>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="221.11302679000914" y="112"/>
+    
+      <rectangleSize width="160"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="92.00000000000001" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Projection_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="302.00000000000006" y="356.9999988079071"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="221.11302679000914" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Projection_1" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Projection_2" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="mingrowthyearpopulation" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput" multiJoinViewNodeName="Join_1">
+      <upperLeftCorner x="198" y="159"/>
+      <rectangleSize width="211.333984375"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
