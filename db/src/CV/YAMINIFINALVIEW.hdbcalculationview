@@ -34,12 +34,14 @@
       <viewAttribute id="VALUE"/>
       <viewAttribute id="VALUE_1"/>
       <viewAttribute id="YEAR"/>
+      <viewAttribute id="CC_YEAR"/>
       <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
       <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+      <viewAttribute hidden="true" id="JOIN$YEAR$CC_YEAR"/>
     </viewAttributes>
     <calculatedViewAttributes>
       <calculatedViewAttribute id="CC_GROWTH" datatype="DECIMAL" length="12" scale="2" expressionLanguage="SQL">
-        <formula>((&quot;VALUE&quot;-&quot;VALUE_1&quot;)/&quot;VALUE&quot;)*100</formula>
+        <formula>((&quot;VALUE_1&quot;-&quot;VALUE&quot;)/&quot;VALUE_1&quot;)*100</formula>
       </calculatedViewAttribute>
     </calculatedViewAttributes>
     <input node="Join_1$$$$MY_BOOKSHOP_POPULATION$$">
@@ -49,20 +51,27 @@
       <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$YEAR$CC_YEAR" source="YEAR"/>
     </input>
     <input node="Projection_1">
       <mapping xsi:type="Calculation:AttributeMapping" target="VALUE" source="VALUE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="CC_YEAR" source="CC_YEAR"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$YEAR$CC_YEAR" source="CC_YEAR"/>
     </input>
     <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
     <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+    <joinAttribute name="JOIN$YEAR$CC_YEAR"/>
   </calculationView>
   <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
     <viewAttributes>
       <viewAttribute id="COUNTRY_NAME"/>
       <viewAttribute id="COUNTRY_CODE"/>
       <viewAttribute id="MIN_GROWTH" aggregationType="min"/>
+    
+      <viewAttribute id="VALUE" aggregationType="sum"/>
+      <viewAttribute id="VALUE_1" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
@@ -75,76 +84,156 @@
       <viewAttribute id="COUNTRY_NAME"/>
       <viewAttribute id="COUNTRY_CODE"/>
       <viewAttribute id="MAX_GROWTH" aggregationType="max"/>
+    
+      <viewAttribute id="VALUE" aggregationType="sum"/>
+      <viewAttribute id="VALUE_1" aggregationType="sum"/>
     </viewAttributes>
     <calculatedViewAttributes/>
     <restrictedViewAttributes/>
     <input node="Join_1">
       <mapping xsi:type="Calculation:AttributeMapping" target="MAX_GROWTH" source="CC_GROWTH"/>
+    </input></calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_4" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="MIN_GROWTH"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+      <viewAttribute hidden="true" id="JOIN$MIN_GROWTH$CC_GROWTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="MIN_year" datatype="NVARCHAR" length="13" expressionLanguage="SQL">
+        <formula>concat(concat(&quot;YEAR&quot;,' - '),&quot;YEAR&quot;+1)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Aggregation_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_GROWTH" source="MIN_GROWTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MIN_GROWTH$CC_GROWTH" source="MIN_GROWTH"/>
     </input>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$MIN_GROWTH$CC_GROWTH" source="CC_GROWTH"/>
+    </input>
+    <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+    <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+    <joinAttribute name="JOIN$MIN_GROWTH$CC_GROWTH"/>
   </calculationView>
-  <calculationView xsi:type="Calculation:JoinView" id="Join_2" cardinality="CN_N" joinType="inner">
+  <calculationView xsi:type="Calculation:JoinView" id="Join_3" cardinality="CN_N" joinType="inner">
     <viewAttributes>
       <viewAttribute id="COUNTRY_NAME"/>
       <viewAttribute id="COUNTRY_CODE"/>
       <viewAttribute id="MAX_GROWTH"/>
+      <viewAttribute id="YEAR"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+      <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+      <viewAttribute hidden="true" id="JOIN$CC_GROWTH$MAX_GROWTH"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="max-year" datatype="NVARCHAR" length="5000" expressionLanguage="SQL">
+        <formula>concat(concat(&quot;YEAR&quot;,' - '),&quot;YEAR&quot;+1)</formula>
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <input node="Join_1">
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="YEAR" source="YEAR"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_GROWTH$MAX_GROWTH" source="CC_GROWTH"/>
+    </input>
+    <input node="Aggregation_2">
+      <mapping xsi:type="Calculation:AttributeMapping" target="MAX_GROWTH" source="MAX_GROWTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$CC_GROWTH$MAX_GROWTH" source="MAX_GROWTH"/>
+    </input>
+    <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
+    <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
+    <joinAttribute name="JOIN$CC_GROWTH$MAX_GROWTH"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:JoinView" id="Join_5" cardinality="CN_N" joinType="inner">
+    <viewAttributes>
+      <viewAttribute id="COUNTRY_NAME"/>
+      <viewAttribute id="COUNTRY_CODE"/>
+      <viewAttribute id="MAX_GROWTH"/>
+      <viewAttribute id="max-year"/>
       <viewAttribute id="MIN_GROWTH"/>
+      <viewAttribute id="MIN_year"/>
       <viewAttribute hidden="true" id="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
       <viewAttribute hidden="true" id="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
     </viewAttributes>
     <calculatedViewAttributes/>
-    <input node="Aggregation_2">
+    <input node="Join_3">
       <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_NAME" source="COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="COUNTRY_CODE" source="COUNTRY_CODE"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="MAX_GROWTH" source="MAX_GROWTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="max-year" source="max-year"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
     </input>
-    <input node="Aggregation_1">
+    <input node="Join_4">
       <mapping xsi:type="Calculation:AttributeMapping" target="MIN_GROWTH" source="MIN_GROWTH"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="MIN_year" source="MIN_year"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_NAME$COUNTRY_NAME" source="COUNTRY_NAME"/>
       <mapping xsi:type="Calculation:AttributeMapping" target="JOIN$COUNTRY_CODE$COUNTRY_CODE" source="COUNTRY_CODE"/>
     </input>
+  
     <joinAttribute name="JOIN$COUNTRY_NAME$COUNTRY_NAME"/>
     <joinAttribute name="JOIN$COUNTRY_CODE$COUNTRY_CODE"/>
   </calculationView>
 </calculationViews>
-<logicalModel id="Join_2">
+<logicalModel id="Join_5">
   <attributes>
     <attribute id="COUNTRY_NAME" order="1" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COUNTRY_NAME"/>
-      <keyMapping columnObjectName="Join_2" columnName="COUNTRY_NAME"/>
+      <keyMapping columnObjectName="Join_5" columnName="COUNTRY_NAME"/>
     </attribute>
     <attribute id="COUNTRY_CODE" order="2" displayAttribute="false" attributeHierarchyActive="false">
       <descriptions defaultDescription="COUNTRY_CODE"/>
-      <keyMapping columnObjectName="Join_2" columnName="COUNTRY_CODE"/>
+      <keyMapping columnObjectName="Join_5" columnName="COUNTRY_CODE"/>
     </attribute>
     <attribute id="MAX_GROWTH" order="3" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_GROWTH"/>
-      <keyMapping columnObjectName="Join_2" columnName="MAX_GROWTH"/>
+      <descriptions defaultDescription="MAX_GROWTH"/>
+      <keyMapping columnObjectName="Join_5" columnName="MAX_GROWTH"/>
     </attribute>
-    <attribute id="MIN_GROWTH" order="4" displayAttribute="false" attributeHierarchyActive="false">
-      <descriptions defaultDescription="CC_GROWTH"/>
-      <keyMapping columnObjectName="Join_2" columnName="MIN_GROWTH"/>
+    <attribute id="max-year" order="4" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="max-year"/>
+      <keyMapping columnObjectName="Join_5" columnName="max-year"/>
+    </attribute>
+    <attribute id="MIN_GROWTH" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MIN_GROWTH"/>
+      <keyMapping columnObjectName="Join_5" columnName="MIN_GROWTH"/>
+    </attribute>
+    <attribute id="MIN_year" order="6" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="MIN_year"/>
+      <keyMapping columnObjectName="Join_5" columnName="MIN_year"/>
     </attribute>
   </attributes>
   <calculatedAttributes/>
   <baseMeasures/>
   <calculatedMeasures/>
-  <restrictedMeasures/>
-</logicalModel>
+  <restrictedMeasures/></logicalModel>
 <layout>
   <shapes>
     <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
-      <upperLeftCorner x="213" y="112"/>
+      <upperLeftCorner x="257" y="112"/>
     
       <rectangleSize width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="198" y="621"/>
+      <upperLeftCorner x="225" y="781"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape expanded="true" modelObjectName="Join_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="198" y="481"/>
+      <upperLeftCorner x="225" y="641"/>
       <rectangleSize height="30" width="160"/>
     </shape>
     <shape modelObjectName="MY_BOOKSHOP_POPULATION" modelObjectNameSpace="Join_1" modelObjectType="JoinNodeInput">
@@ -157,25 +246,49 @@
     </shape>
   
     <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="302" y="356"/>
+      <upperLeftCorner x="92" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape expanded="true" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="92" y="356"/>
+    <shape expanded="false" modelObjectName="Aggregation_2" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="350" y="516"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-  
-    <shape expanded="true" modelObjectName="Join_2" modelObjectNameSpace="CalculationView">
-      <upperLeftCorner x="213" y="217"/>
+    <shape expanded="true" modelObjectName="Join_4" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="118" y="370"/>
       <rectangleSize height="30" width="160"/>
     </shape>
-    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="20" y="30"/>
       <rectangleSize width="178"/>
     </shape>
-    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="Join_2" modelObjectType="JoinNodeInput">
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_4" modelObjectType="JoinNodeInput">
       <upperLeftCorner x="320" y="30"/>
       <rectangleSize width="178"/>
+    </shape>
+  
+    <shape expanded="true" modelObjectName="Join_3" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="328" y="356"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_1" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="250"/>
+    </shape>
+    <shape modelObjectName="Aggregation_2" modelObjectNameSpace="Join_3" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Join_5" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="257" y="217"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Join_3" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="178"/>
+    </shape>
+    <shape modelObjectName="Join_4" modelObjectNameSpace="Join_5" modelObjectType="JoinNodeInput">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="250"/>
     </shape>
   </shapes>
 </layout>
